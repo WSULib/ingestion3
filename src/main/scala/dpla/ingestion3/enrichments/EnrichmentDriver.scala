@@ -24,22 +24,21 @@ class EnrichmentDriver {
 
   /**
     * Applies a set of common enrichments that need to be run for all providers
-    *   * Spatial
-    *   * Language
-    *   * Type
-    *   * Date
+    * * Spatial
+    * * Language
+    * * Type
+    * * Date
     *
     * @param record The mapped record
     * @return An enriched record
     */
   def enrich(record: DplaMapData): DplaMapData = {
     record.copy(
-
-  record.sourceResource.copy(
+      record.sourceResource.copy(
         date = record.sourceResource.date.map(d => dateEnrichment.parse(d)),
         language = record.sourceResource.language.map(LanguageMapper.mapLanguage),
-        place = record.sourceResource.place
-                      .map(p => spatialEnrichment.enrich(p))
-    ))
+        place = record.sourceResource.place.map(p => spatialEnrichment.enrich(p))
+      )
+    )
   }
 }

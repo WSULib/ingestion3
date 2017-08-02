@@ -42,7 +42,7 @@ case class Result(interpretations: List[Interpretation])
   */
 trait Twofisher {
 
-  def hostname: String = "localhost"
+  def hostname: String = "geo-prod"
   def port: String = "8081"
 
   /**
