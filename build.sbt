@@ -1,4 +1,3 @@
-
 lazy val root = (project in file("."))
   .configs(IntegrationTest)
   .settings(
@@ -8,8 +7,8 @@ lazy val root = (project in file("."))
     Defaults.itSettings,
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.0.1" % "it,test",
-      "org.apache.spark" %% "spark-core" % "2.0.1" exclude("org.scalatest", "scalatest_2.11"),
-      "org.apache.spark" %% "spark-sql" % "2.0.1" exclude("org.scalatest", "scalatest_2.11"),
+      "org.apache.spark" %% "spark-core" % "2.1.1" exclude("org.scalatest", "scalatest_2.11"),
+      "org.apache.spark" %% "spark-sql" % "2.1.1" exclude("org.scalatest", "scalatest_2.11"),
       "com.databricks" %% "spark-avro" % "3.2.0",
       "org.json4s" %% "json4s-core" % "3.2.11" % "provided",
       "org.json4s" %% "json4s-jackson" % "3.2.11" % "provided",

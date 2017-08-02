@@ -13,8 +13,8 @@
   "doc": "",
 
   "types": [
-  {"name": "StringArray", "type": "array", "items": "string"},
-  {
+      { "name": "StringArray", "type": "array", "items": "string"},
+        {
     "name": "Collection",  // dcmitype:Collection
     "type": "record",
     "fields": [

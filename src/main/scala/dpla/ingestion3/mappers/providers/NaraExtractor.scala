@@ -248,6 +248,8 @@ object NaraTypeVocabEnforcer extends VocabEnforcer[String] {
 
   def mapNaraType(value: String): Option[IRI] = mapVocab(value, naraVocab)
 
+
+
 }
 
 

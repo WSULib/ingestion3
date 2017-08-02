@@ -34,7 +34,8 @@ class EnrichmentDriver {
     */
   def enrich(record: DplaMapData): DplaMapData = {
     record.copy(
-      DplaSourceResource(
+
+  record.sourceResource.copy(
         date = record.sourceResource.date.map(d => dateEnrichment.parse(d)),
         language = record.sourceResource.language.map(LanguageMapper.mapLanguage),
         place = record.sourceResource.place
