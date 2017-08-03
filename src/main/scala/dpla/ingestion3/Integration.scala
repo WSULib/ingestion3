@@ -29,7 +29,7 @@ object Integration {
     mappedData.toDS().write.format("com.databricks.spark.avro").save(args(1)) //.option("avroSchema", schemaString)
     val roundTripMapped = spark.read.avro(args(1)).as[DplaMapData]
     val enrichedData = mappedData.map(record => new EnrichmentDriver().enrich(record))
-    enrichedData.write.format("com.databricks.spark.avro").save(args(2))
+    enrichedData.toDF.write.format("com.databricks.spark.avro").save(args(2))
     val roundTripEnriched = spark.read.avro(args(2)).as[DplaMapData]
     val jsonData = enrichedData.map(model.jsonlRecord).map(_.replaceAll("\n", " "))
     jsonData.saveAsTextFile(args(3))
