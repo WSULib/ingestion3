@@ -36,6 +36,7 @@ package object model {
     val recordID: String = generateMd5(Some(record.oreAggregation.uri.toString))
     val jobj: JObject =
       ("_type" -> "item") ~
+      ("_id" -> java.util.UUID.randomUUID().toString) ~
         ("_source" ->
           ("id" -> recordID) ~
             ("@context" -> "http://dp.la/api/items/context") ~
@@ -44,13 +45,13 @@ package object model {
               ("sourceResource" -> ("title" -> record.sourceResource.title))) ~
             ("aggregatedCHO" -> "#sourceResource") ~
             ("dataProvider" -> record.oreAggregation.dataProvider.name) ~
-            ("ingestDate" -> "FIXME") ~ // FIXME: no place in MAPv4 schema for this
+//            ("ingestDate" -> "FIXME") ~ // FIXME: no place in MAPv4 schema for this
             ("ingestType" -> "item") ~
-            ("isShownAt" -> record.edmWebResource.uri.toString) ~
+            ("isShownAt" -> Seq(record.edmWebResource.uri.toString)) ~
             ("object" -> record.oreAggregation.`object`
               .map { o => o.uri.toString }) ~
-            ("originalRecord" -> record.oreAggregation.originalRecord) ~
-            ("provider" -> record.oreAggregation.provider.name) ~
+            //("originalRecord" -> "") ~
+            ("provider" -> ("name" ->record.oreAggregation.provider.name)) ~
             ("sourceResource" ->
               ("@id" ->
                 ("http://dp.la/api/items/" + recordID + "#SourceResource")) ~
@@ -58,12 +59,12 @@ package object model {
                   record.sourceResource.collection.map { c => "title" -> c.title }) ~
                 ("contributor" -> record.sourceResource.contributor.map { c => c.name }) ~
                 ("creator" -> record.sourceResource.creator.map { c => c.name }) ~
-                ("date" ->
-                  record.sourceResource.date.map { d =>
-                    ("displayDate" -> d.originalSourceDate) ~
-                      ("begin" -> d.begin) ~
-                      ("end" -> d.end)
-                  }) ~
+//                ("date" ->
+ //                 record.sourceResource.date.map { d =>
+  //                  ("displayDate" -> d.originalSourceDate) ~
+   //                   ("begin" -> d.begin) ~
+   //                   ("end" -> d.end)
+   //               }) ~
                 ("description" -> record.sourceResource.description) ~
                 ("extent" -> record.sourceResource.extent) ~
                 ("format" -> record.sourceResource.format) ~
@@ -77,15 +78,15 @@ package object model {
                   record.sourceResource.relation.map { r =>
                     r.merge.toString
                   }) ~
-                ("rights" -> record.sourceResource.rights) ~
+                //("rights" -> record.sourceResource.rights) ~
                 // FIXME: Wait til open PR for geo enrichments gets merged before
                 // implementing Spatial.
-                ("spatial" -> "FIXME") ~
+                //("spatial" -> "FIXME") ~
                 /*
                  * FIXME: specType is unaccounted for in MAPv4 and DplaMapData.
                  * It was edm:hasType in MAPv3.1.  It was optional. Shall we omit it?
                  */
-                ("specType" -> "FIXME") ~
+                //("specType" -> "FIXME") ~
                 // stateLocatedIn is being omitted here ...
                 ("subject" -> record.sourceResource.subject.map { s => s.providedLabel }) ~
                 ("temporal" ->
@@ -97,7 +98,7 @@ package object model {
                 ("title" -> record.sourceResource.title) ~
                 ("type" -> record.sourceResource.`type`)
               ) ~
-            ("type" -> "ore:Aggregation"))
+            ("@type" -> "ore:Aggregation"))
 
     compact(render(jobj))
   }
