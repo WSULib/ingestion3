@@ -1,6 +1,8 @@
 package dpla.ingestion3.reports
+
 import dpla.ingestion3.model.DplaMapData
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import java.net.URI
 
 class ThumbnailReport (
                             val inputURI: String,
@@ -30,5 +32,31 @@ class ThumbnailReport (
   override def process(ds: Dataset[DplaMapData], spark: SparkSession): DataFrame = {
     import spark.implicits._
 
+    implicit val dplaMapDataEncoder =
+      org.apache.spark.sql.Encoders.kryo[DplaMapData]
+
+    val thumbnailData: Dataset[ThumbnailReportItem] = ds.map(dplaMapData => {
+
+      val hasImageType = dplaMapData.sourceResource.`type`.contains("image")
+
+      val providerUri = dplaMapData.edmWebResource.uri.toString
+      val dplaUri = dplaMapData.oreAggregation.uri.toString
+
+      val preview = dplaMapData.oreAggregation.preview match {
+        case Some(preview) => Some(preview.uri.toString)
+        case None => None
+      }
+
+      ThumbnailReportItem(hasImageType, preview, providerUri, dplaUri)
+    })
+
+    thumbnailData.select("providerUri", "dplaUri")
+      .filter("hasImageType = TRUE")
+      .filter("preview is null")
   }
 }
+
+case class ThumbnailReportItem(hasImageType: Boolean,
+                               preview: Option[String],
+                               providerUri: String,
+                               dplaUri: String)
