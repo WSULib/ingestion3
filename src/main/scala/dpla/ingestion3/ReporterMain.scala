@@ -53,6 +53,10 @@ class Reporter (
         Some(new PropertyValueReport(
           inputURI, outputURI, sparkMasterName, reportParams
         ))
+      case "thumbnailReport" =>
+        Some(new ThumbnailReport(
+          inputURI, outputURI, sparkMasterName, reportParams
+        ))
       case _ => None
     }
   }
