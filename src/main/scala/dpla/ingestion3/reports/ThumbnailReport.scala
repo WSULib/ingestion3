@@ -1,6 +1,6 @@
 package dpla.ingestion3.reports
 
-import dpla.ingestion3.model.DplaMapData
+import dpla.ingestion3.model.{DplaMapData, EdmWebResource}
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import java.net.URI
 
@@ -37,7 +37,8 @@ class ThumbnailReport (
 
     val thumbnailData: Dataset[ThumbnailReportItem] = ds.map(dplaMapData => {
 
-      val hasImageType = dplaMapData.sourceResource.`type`.contains("image")
+      val hasImageType = dplaMapData.sourceResource.`type`
+        .filter{ _.toLowerCase() == "image"}.nonEmpty
 
       val providerUri = dplaMapData.edmWebResource.uri.toString
       val dplaUri = dplaMapData.oreAggregation.uri.toString
@@ -50,7 +51,7 @@ class ThumbnailReport (
       ThumbnailReportItem(hasImageType, preview, providerUri, dplaUri)
     })
 
-    thumbnailData.select("providerUri", "dplaUri")
+    thumbnailData.select("hasImageType", "preview", "providerUri", "dplaUri")
       .filter("hasImageType = TRUE")
       .filter("preview is null")
   }
